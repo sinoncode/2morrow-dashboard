@@ -5,30 +5,14 @@ WORKDIR /var/www
 
 # Install system dependencies
 RUN apk add --no-cache \
-    build-base \
-    libpng-dev \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
     zip \
     unzip \
     git \
-    curl \
-    postgresql-dev \
-    redis
+    curl
 
 # Install PHP extensions
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) \
-    gd \
-    pdo \
-    pdo_pgsql \
-    zip \
-    bcmath \
-    ctype \
-    json \
-    fileinfo \
-    exif
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
+RUN install-php-extensions gd pdo_pgsql zip bcmath exif redis
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

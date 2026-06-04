@@ -17,3 +17,23 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+
+# Laravel storage ignores
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitkeep
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitkeep
+/storage/framework/testing/*
+!/storage/framework/testing/.gitkeep
+/storage/framework/views/*
+!/storage/framework/views/.gitkeep
+/storage/logs/*
+!/storage/logs/.gitkeep
+
+# Database files
+*.sqlite
+/database/*.sqlite
+/database/*.sqlite-journal
+

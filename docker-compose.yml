@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # ── Laravel Application ──────────────────────────
   app:
@@ -39,7 +37,7 @@ services:
     container_name: postgres_db
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_DB: ${DB_DATABASE:-logistics_db}
       POSTGRES_USER: ${DB_USERNAME:-laravel}
@@ -70,7 +68,7 @@ services:
     container_name: laravel_queue
     restart: unless-stopped
     working_dir: /var/www
-    command: php artisan queue:work --sleep=3 --tries=3 --max-time=3600
+    command: sh -c "until nc -z -w 1 db 5432 && nc -z -w 1 redis 6379; do echo 'Waiting for database and redis...'; sleep 2; done; php artisan queue:work --sleep=3 --tries=3 --max-time=3600"
     volumes:
       - ./:/var/www
     networks:
@@ -81,7 +79,6 @@ services:
       - redis
 
   # ── pgAdmin (Optional – DB Management UI) ───────
- 
 
 # ── Volumes ──────────────────────────────────────────
 volumes:
