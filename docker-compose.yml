@@ -1,93 +1,38 @@
 services:
-  # ── Laravel Application ──────────────────────────
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
-    restart: unless-stopped
-    working_dir: /var/www
+    image: 2morrow-admin-app
+    ports:
+      - '8000:8000'
     volumes:
-      - ./:/var/www
-      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    networks:
-      - app_network
+      - ./:/var/www/html
+    environment:
+      APP_ENV: local
+      APP_DEBUG: 'true'
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: 2morrow
+      DB_USERNAME: postgres
+      DB_PASSWORD: secret
     depends_on:
       - db
-      - redis
+    command: sh -lc "until php -r 'new PDO(\"pgsql:host=db;port=5432;dbname=2morrow\", \"postgres\", \"secret\");' 2>/dev/null; do echo 'Waiting for Postgres...'; sleep 1; done; if [ ! -d vendor ] || [ ! -f vendor/autoload.php ]; then composer install --no-dev --optimize-autoloader; fi && php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000"
 
-  # ── Nginx Web Server ─────────────────────────────
-  webserver:
-    image: nginx:alpine
-    container_name: nginx_server
-    restart: unless-stopped
-    ports:
-      - "8080:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/conf.d:/etc/nginx/conf.d
-    networks:
-      - app_network
-    depends_on:
-      - app
-
-  # ── PostgreSQL Database ──────────────────────────
   db:
-    image: postgres:15-alpine
-    container_name: postgres_db
+    image: postgres:15
     restart: unless-stopped
-    ports:
-      - "5433:5432"
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-logistics_db}
-      POSTGRES_USER: ${DB_USERNAME:-laravel}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+      POSTGRES_DB: 2morrow
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+    ports:
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
-    networks:
-      - app_network
 
-  # ── Redis (Cache, Queues, Sessions) ──────────────
-  redis:
-    image: redis:7-alpine
-    container_name: redis_cache
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    command: redis-server --appendonly yes
-    volumes:
-      - redisdata:/data
-    networks:
-      - app_network
-
-  # ── Queue Worker ─────────────────────────────────
-  queue:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: laravel_queue
-    restart: unless-stopped
-    working_dir: /var/www
-    command: sh -c "until nc -z -w 1 db 5432 && nc -z -w 1 redis 6379; do echo 'Waiting for database and redis...'; sleep 2; done; php artisan queue:work --sleep=3 --tries=3 --max-time=3600"
-    volumes:
-      - ./:/var/www
-    networks:
-      - app_network
-    depends_on:
-      - app
-      - db
-      - redis
-
-  # ── pgAdmin (Optional – DB Management UI) ───────
-
-# ── Volumes ──────────────────────────────────────────
 volumes:
   pgdata:
-    driver: local
-  redisdata:
-    driver: local
-
-# ── Networks ─────────────────────────────────────────
-networks:
-  app_network:
-    driver: bridge

@@ -1,0 +1,575 @@
+{
+  "info": {
+    "name": "2Morrow Admin API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for 2Morrow Admin API including auth, dashboard, RBAC, and resource endpoints."
+  },
+  "item": [
+    {
+      "name": "Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/status",
+          "host": ["{{base_url}}"],
+          "path": ["api", "status"]
+        }
+      }
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "login"]
+            }
+          }
+        },
+        {
+          "name": "Forgot Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/forgot-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "forgot-password"]
+            }
+          }
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"token\": \"<reset_token>\",\n  \"password\": \"newpassword\",\n  \"password_confirmation\": \"newpassword\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/reset-password",
+              "host": ["{{base_url}}"],
+              "path": ["api", "reset-password"]
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "me"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {
+              "raw": "{{base_url}}/api/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "request": {
+        "method": "GET",
+        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+        "url": {
+          "raw": "{{base_url}}/api/dashboard",
+          "host": ["{{base_url}}"],
+          "path": ["api", "dashboard"]
+        }
+      }
+    },
+    {
+      "name": "RBAC",
+      "item": [
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/roles","host": ["{{base_url}}"],"path": ["api", "roles"]}
+          }
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"name\": \"admin\",\n  \"description\": \"Administrator role\",\n  \"permissions\": []\n}"},
+            "url": {"raw": "{{base_url}}/api/roles","host": ["{{base_url}}"],"path": ["api", "roles"]}
+          }
+        },
+        {
+          "name": "Show Role",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/roles/{{role_id}}","host": ["{{base_url}}"],"path": ["api", "roles", "{{role_id}}"]}
+          }
+        },
+        {
+          "name": "Update Role",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"description\": \"Updated role description\",\n  \"permissions\": []\n}"},
+            "url": {"raw": "{{base_url}}/api/roles/{{role_id}}","host": ["{{base_url}}"],"path": ["api", "roles", "{{role_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Role",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/roles/{{role_id}}","host": ["{{base_url}}"],"path": ["api", "roles", "{{role_id}}"]}
+          }
+        },
+        {
+          "name": "List Permissions",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/permissions","host": ["{{base_url}}"],"path": ["api", "permissions"]}
+          }
+        },
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"name\": \"manage_users\",\n  \"description\": \"Manage users and roles\"\n}"},
+            "url": {"raw": "{{base_url}}/api/permissions","host": ["{{base_url}}"],"path": ["api", "permissions"]}
+          }
+        },
+        {
+          "name": "Show Permission",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/permissions/{{permission_id}}","host": ["{{base_url}}"],"path": ["api", "permissions", "{{permission_id}}"]}
+          }
+        },
+        {
+          "name": "Update Permission",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"description\": \"Updated permission description\"\n}"},
+            "url": {"raw": "{{base_url}}/api/permissions/{{permission_id}}","host": ["{{base_url}}"],"path": ["api", "permissions", "{{permission_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Permission",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/permissions/{{permission_id}}","host": ["{{base_url}}"],"path": ["api", "permissions", "{{permission_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/users","host": ["{{base_url}}"],"path": ["api", "users"]}
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"name\": \"Example User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password\",\n  \"roles\": [1]\n}"},
+            "url": {"raw": "{{base_url}}/api/users","host": ["{{base_url}}"],"path": ["api", "users"]}
+          }
+        },
+        {
+          "name": "Show User",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/users/{{user_id}}","host": ["{{base_url}}"],"path": ["api", "users", "{{user_id}}"]}
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"name\": \"Updated User\",\n  \"roles\": [2]\n}"},
+            "url": {"raw": "{{base_url}}/api/users/{{user_id}}","host": ["{{base_url}}"],"path": ["api", "users", "{{user_id}}"]}
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/users/{{user_id}}","host": ["{{base_url}}"],"path": ["api", "users", "{{user_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Agents",
+      "item": [
+        {
+          "name": "List Agents",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/agents","host": ["{{base_url}}"],"path": ["api", "agents"]}
+          }
+        },
+        {
+          "name": "Create Agent",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"jdoe@example.com\",\n  \"phone\": \"1234567890\"\n}"},
+            "url": {"raw": "{{base_url}}/api/agents","host": ["{{base_url}}"],"path": ["api", "agents"]}
+          }
+        },
+        {
+          "name": "Show Agent",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/agents/{{agent_id}}","host": ["{{base_url}}"],"path": ["api", "agents", "{{agent_id}}"]}
+          }
+        },
+        {
+          "name": "Update Agent",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"phone\": \"5555555555\"\n}"},
+            "url": {"raw": "{{base_url}}/api/agents/{{agent_id}}","host": ["{{base_url}}"],"path": ["api", "agents", "{{agent_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Agent",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/agents/{{agent_id}}","host": ["{{base_url}}"],"path": ["api", "agents", "{{agent_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Properties",
+      "item": [
+        {
+          "name": "List Properties",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/properties","host": ["{{base_url}}"],"path": ["api", "properties"]}
+          }
+        },
+        {
+          "name": "Create Property",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"title\": \"Office Space\",\n  \"price\": 1200000.00,\n  \"status\": \"active\"\n}"},
+            "url": {"raw": "{{base_url}}/api/properties","host": ["{{base_url}}"],"path": ["api", "properties"]}
+          }
+        },
+        {
+          "name": "Show Property",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/properties/{{property_id}}","host": ["{{base_url}}"],"path": ["api", "properties", "{{property_id}}"]}
+          }
+        },
+        {
+          "name": "Update Property",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"status\": \"inactive\"\n}"},
+            "url": {"raw": "{{base_url}}/api/properties/{{property_id}}","host": ["{{base_url}}"],"path": ["api", "properties", "{{property_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Property",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/properties/{{property_id}}","host": ["{{base_url}}"],"path": ["api", "properties", "{{property_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contacts",
+      "item": [
+        {
+          "name": "List Contacts",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/contacts","host": ["{{base_url}}"],"path": ["api", "contacts"]}
+          }
+        },
+        {
+          "name": "Create Contact",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\",\n  \"email\": \"jane@example.com\",\n  \"phone\": \"9876543210\"\n}"},
+            "url": {"raw": "{{base_url}}/api/contacts","host": ["{{base_url}}"],"path": ["api", "contacts"]}
+          }
+        },
+        {
+          "name": "Show Contact",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/contacts/{{contact_id}}","host": ["{{base_url}}"],"path": ["api", "contacts", "{{contact_id}}"]}
+          }
+        },
+        {
+          "name": "Update Contact",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"phone\": \"1112223333\"\n}"},
+            "url": {"raw": "{{base_url}}/api/contacts/{{contact_id}}","host": ["{{base_url}}"],"path": ["api", "contacts", "{{contact_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Contact",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/contacts/{{contact_id}}","host": ["{{base_url}}"],"path": ["api", "contacts", "{{contact_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Leads",
+      "item": [
+        {
+          "name": "List Leads",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/leads","host": ["{{base_url}}"],"path": ["api", "leads"]}
+          }
+        },
+        {
+          "name": "Create Lead",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"first_name\": \"Susan\",\n  \"last_name\": \"Chen\",\n  \"email\": \"susan@example.com\",\n  \"status\": \"new\"\n}"},
+            "url": {"raw": "{{base_url}}/api/leads","host": ["{{base_url}}"],"path": ["api", "leads"]}
+          }
+        },
+        {
+          "name": "Show Lead",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/leads/{{lead_id}}","host": ["{{base_url}}"],"path": ["api", "leads", "{{lead_id}}"]}
+          }
+        },
+        {
+          "name": "Update Lead",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"status\": \"qualified\"\n}"},
+            "url": {"raw": "{{base_url}}/api/leads/{{lead_id}}","host": ["{{base_url}}"],"path": ["api", "leads", "{{lead_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Lead",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/leads/{{lead_id}}","host": ["{{base_url}}"],"path": ["api", "leads", "{{lead_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Requests",
+      "item": [
+        {
+          "name": "List Requests",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/requests","host": ["{{base_url}}"],"path": ["api", "requests"]}
+          }
+        },
+        {
+          "name": "Create Request",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"client_name\": \"Acme Corp\",\n  \"client_email\": \"buyer@example.com\",\n  \"request_type\": \"purchase\"\n}"},
+            "url": {"raw": "{{base_url}}/api/requests","host": ["{{base_url}}"],"path": ["api", "requests"]}
+          }
+        },
+        {
+          "name": "Show Request",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/requests/{{request_id}}","host": ["{{base_url}}"],"path": ["api", "requests", "{{request_id}}"]}
+          }
+        },
+        {
+          "name": "Update Request",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"status\": \"open\"\n}"},
+            "url": {"raw": "{{base_url}}/api/requests/{{request_id}}","host": ["{{base_url}}"],"path": ["api", "requests", "{{request_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Request",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/requests/{{request_id}}","host": ["{{base_url}}"],"path": ["api", "requests", "{{request_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Activities",
+      "item": [
+        {
+          "name": "List Activities",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/activities","host": ["{{base_url}}"],"path": ["api", "activities"]}
+          }
+        },
+        {
+          "name": "Create Activity",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"title\": \"Client Call\",\n  \"status\": \"scheduled\",\n  \"start_time\": \"2026-06-10T10:00:00Z\"\n}"},
+            "url": {"raw": "{{base_url}}/api/activities","host": ["{{base_url}}"],"path": ["api", "activities"]}
+          }
+        },
+        {
+          "name": "Show Activity",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/activities/{{activity_id}}","host": ["{{base_url}}"],"path": ["api", "activities", "{{activity_id}}"]}
+          }
+        },
+        {
+          "name": "Update Activity",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"status\": \"completed\"\n}"},
+            "url": {"raw": "{{base_url}}/api/activities/{{activity_id}}","host": ["{{base_url}}"],"path": ["api", "activities", "{{activity_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Activity",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/activities/{{activity_id}}","host": ["{{base_url}}"],"path": ["api", "activities", "{{activity_id}}"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "Emails",
+      "item": [
+        {
+          "name": "List Emails",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/emails","host": ["{{base_url}}"],"path": ["api", "emails"]}
+          }
+        },
+        {
+          "name": "Create Email",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"from_email\": \"no-reply@example.com\",\n  \"to_email\": \"user@example.com\",\n  \"subject\": \"Welcome\",\n  \"body\": \"Hello from 2Morrow Admin.\"\n}"},
+            "url": {"raw": "{{base_url}}/api/emails","host": ["{{base_url}}"],"path": ["api", "emails"]}
+          }
+        },
+        {
+          "name": "Show Email",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/emails/{{email_id}}","host": ["{{base_url}}"],"path": ["api", "emails", "{{email_id}}"]}
+          }
+        },
+        {
+          "name": "Update Email",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"},{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "body": {"mode": "raw","raw": "{\n  \"subject\": \"Updated subject\"\n}"},
+            "url": {"raw": "{{base_url}}/api/emails/{{email_id}}","host": ["{{base_url}}"],"path": ["api", "emails", "{{email_id}}"]}
+          }
+        },
+        {
+          "name": "Delete Email",
+          "request": {
+            "method": "DELETE",
+            "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+            "url": {"raw": "{{base_url}}/api/emails/{{email_id}}","host": ["{{base_url}}"],"path": ["api", "emails", "{{email_id}}"]}
+          }
+        }
+      ]
+    }
+  ]
+}

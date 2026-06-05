@@ -1,35 +1,25 @@
-FROM php:8.3-fpm-alpine
+FROM php:8.4-cli
 
-# Set working directory
-WORKDIR /var/www
-
-# Install system dependencies
-RUN apk add --no-cache \
-    zip \
-    unzip \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
-    curl
+    unzip \
+    libpq-dev \
+    libzip-dev \
+    zlib1g-dev \
+    zip \
+    curl \
+    && docker-php-ext-install pdo pdo_pgsql \
+    && pecl install redis && docker-php-ext-enable redis \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
-RUN install-php-extensions gd pdo_pgsql zip bcmath exif redis
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
 
-# Copy application files
-COPY . .
+COPY . /var/www/html
 
-# Install PHP dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage \
-    && chmod -R 755 /var/www/bootstrap/cache
+EXPOSE 8000
 
-# Expose port (for FPM)
-EXPOSE 9000
-
-# Start PHP-FPM
-CMD ["php-fpm"]
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
